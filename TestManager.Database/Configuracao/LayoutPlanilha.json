@@ -1,0 +1,23 @@
+﻿{
+  "Funcionalidade": [
+    "ID",
+    "Funcionalidade",
+    "Eu",
+    "Para",
+    "Quero"
+  ],
+  "Cenario": [
+    "IdFuncionalidade",
+    "Frente",
+    "Cenario",
+    "Dado",
+    "Quando",
+    "Entao",
+    "Tipo",
+    "Massa",
+    "Detalhe",
+    "Status",
+    "Data Planejada",
+    "Data Realizado"
+  ]
+}
