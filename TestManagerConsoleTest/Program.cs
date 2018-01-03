@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestManager.BLL;
 
+
 namespace TestManagerConsoleTest
 {
     class Program
@@ -12,8 +13,9 @@ namespace TestManagerConsoleTest
         static void Main(string[] args)
         {
             Configuracao conf = new Configuracao();
-            
-            Console.WriteLine(conf.GerarWorkbook(@"c:\projetos", "saida.xlsx").Result);
+
+            //Console.WriteLine(conf.GerarWorkbook(@"c:\projetos", "saida.xlsx").Result);
+            conf.CarregarCampos();
             Console.ReadLine();
         }
     }

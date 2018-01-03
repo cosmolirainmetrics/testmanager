@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,21 +48,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmConfiguracao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmConfiguracao.Designer.cs">
+      <DependentUpon>frmConfiguracao.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmConfiguracao.resx">
+      <DependentUpon>frmConfiguracao.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -68,6 +82,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TestManager.BLL\TestManager.BLL.csproj">
+      <Project>{4b1aacdc-6019-40ed-8f3b-7c895fbf23fb}</Project>
+      <Name>TestManager.BLL</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\291217110103_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\291217110116_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\291217110124_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\291217110133_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7183_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2934_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\7182_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8464_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\8470_16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
