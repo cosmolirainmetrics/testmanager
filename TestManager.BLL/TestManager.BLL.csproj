@@ -50,9 +50,14 @@
   <ItemGroup>
     <Compile Include="Arquivo.cs" />
     <Compile Include="Configuracao.cs" />
+    <Compile Include="Feature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TestManager.Common\TestManager.Common.csproj">
+      <Project>{84eec8d0-90d3-4aea-ac42-8bd295fe99bc}</Project>
+      <Name>TestManager.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TestManager.Model\TestManager.Model.csproj">
       <Project>{f304b5dc-0a10-422f-aca4-5827abcffc77}</Project>
       <Name>TestManager.Model</Name>

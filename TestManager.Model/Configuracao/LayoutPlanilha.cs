@@ -22,15 +22,23 @@ namespace TestManager.Model.Configuracao
         }
 
         private void GetSchema()
-        {           
-            this.model = JObject.Parse(
-                File.OpenText(this._caminhoDatabase).ReadToEnd()
-                );
+        {
+            using (var str = File.OpenText(this._caminhoDatabase))
+            {
+                this.model = JObject.Parse(                    
+                    str.ReadToEnd());
+                str.Close();
+            }                
         }
 
         public JObject GetFields()
         {
             return this.model;
+        }
+
+        public string CaminhoArquivoConfiguracao()
+        {
+            return this._caminhoDatabase;
         }
     }
 }

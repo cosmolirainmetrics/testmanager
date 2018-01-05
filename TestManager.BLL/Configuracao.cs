@@ -15,15 +15,45 @@ namespace TestManager.BLL
 {
     public class Configuracao
     {
+        LayoutPlanilha configuracao = new LayoutPlanilha();
+
+        public string GetCaminhoArquivo() { return configuracao.CaminhoArquivoConfiguracao(); }
+
         public JObject CarregarCampos()
-        {
-            LayoutPlanilha configuracao = new LayoutPlanilha();
+        {            
             return configuracao.GetFields();            
         }
-
+        
         private List<string> JsonToList(JObject obj)
         {
             return JsonConvert.DeserializeObject<List<string>>(obj.ToString());
+        }
+
+        public bool IsValidJson(string strInput)
+        {
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) ||
+                (strInput.StartsWith("[") && strInput.EndsWith("]")))
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch (JsonReaderException jex)
+                {                    
+                    Console.WriteLine(jex.Message);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);                                        
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

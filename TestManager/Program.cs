@@ -16,7 +16,7 @@ namespace TestManager
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmConfiguracao());
+            Application.Run(new frmFeature());
         }
     }
 }
