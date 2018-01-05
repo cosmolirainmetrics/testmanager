@@ -59,11 +59,13 @@
             // 
             // btnSelecionar
             // 
-            this.btnSelecionar.Location = new System.Drawing.Point(558, 15);
+            this.btnSelecionar.Image = global::TestManager.Properties.Resources._7183_32x32;
+            this.btnSelecionar.Location = new System.Drawing.Point(532, 7);
             this.btnSelecionar.Name = "btnSelecionar";
-            this.btnSelecionar.Size = new System.Drawing.Size(75, 23);
+            this.btnSelecionar.Size = new System.Drawing.Size(108, 42);
             this.btnSelecionar.TabIndex = 1;
             this.btnSelecionar.Text = "&Selecionar";
+            this.btnSelecionar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSelecionar.UseVisualStyleBackColor = true;
             this.btnSelecionar.Click += new System.EventHandler(this.btnSelecionar_ClickAsync);
             // 
