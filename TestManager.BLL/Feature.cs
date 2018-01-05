@@ -10,14 +10,40 @@ namespace TestManager.BLL
 {
     public class Feature
     {
-        public Dictionary<Funcionalidade, List<Cenario>> ImportarPlanilha(string caminho)
+        public async Task<List<Funcionalidade>> ImportarPlanilha(string caminho)
         {
-            Arquivo arquivo = new Arquivo();
+            try
+            {
+                Arquivo arquivo = new Arquivo();
 
-            arquivo.ImportarPlanilha(caminho);
-            arquivo.Dispose();
+                List<Funcionalidade> funcionalidades = arquivo.ImportarPlanilha(caminho);
+                arquivo.Dispose();
 
-            return new Dictionary<Funcionalidade, List<Cenario>>();
+                return funcionalidades;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> ExportarPlanilha(List<Funcionalidade> funcionalidades)
+        {
+            try
+            {
+                Arquivo arquivo = new Arquivo();
+
+                foreach (Funcionalidade funcionalidade in funcionalidades)
+                {
+                    arquivo.ExportarArquivo(funcionalidade);
+                }
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

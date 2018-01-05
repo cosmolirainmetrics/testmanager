@@ -33,50 +33,44 @@ namespace TestManager.BLL
            
         }
 
-        public async Task<List<Funcionalidade>> ImportarPlanilha(string caminho)
+        public List<Funcionalidade> ImportarPlanilha(string caminho)
         {            
-            //xWork = xls.Workbooks.Open(caminho);
-            return await this.ExtraiPlanilha("Funcionalidade", caminho);
+            
+            List<Funcionalidade> funcionalidades =
+                this.ExtraiPlanilha("Funcionalidade", caminho);
 
-            //Excel.Worksheet sheet = xWork.Sheets["Funcionalidade"];            
-            //xRange = sheet.UsedRange;
+            foreach(Funcionalidade funcionalidade in funcionalidades)
+            {
+                funcionalidade.Cenarios.AddRange(
+                    this.ExtraiCenarioPorFuncionalidade(funcionalidade, caminho, "Cenario"));
+            }
 
-            //int rowCount = xRange.Rows.Count;
-            //int colCount = xRange.Columns.Count;
-
-            //for(int row = 2; row <= rowCount; row++)
-            //{
-            //    Funcionalidade func = new Funcionalidade();
-
-            //    if (xRange[row, 1].Value != null)
-            //    {
-
-            //        func.ID = Texto.RetiraAcento(xRange[row, 1].Value);
-            //        func.Descricao = Texto.RetiraAcento(xRange[row, 2].Value);
-            //        func.Eu = Texto.RetiraAcento(xRange[row, 3].Value);
-            //        func.Para = Texto.RetiraAcento(xRange[row, 4].Value);
-            //        func.Quero = Texto.RetiraAcento(xRange[row, 5].Value);
-
-            //        funcionalidades.Add(func);
-            //    }
-            //}
-
-
-
-            //return "";
-            ////await Task.Run(() =>
-            ////{
-
-
-
-            ////    //foreach (Excel._Worksheet sheet in xWork.Sheets)
-            ////    //{
-
-            ////    //}
-            ////});
+            return funcionalidades;
         }
 
-        private async Task<List<Funcionalidade>> ExtraiPlanilha( string nomePlanilha, string caminho)
+        public void ExportarArquivo(Funcionalidade funcionalidade)
+        {
+            using (var str = new StreamWriter(File.Create(funcionalidade.Arquivo)))
+            {
+                str.WriteLine(string.Format("Funcionalidade: {0}", funcionalidade.Descricao));
+                str.WriteLine(string.Format("Eu {0}", funcionalidade.Eu));
+                str.WriteLine(string.Format("Quero {0}", funcionalidade.Quero));
+                str.WriteLine(string.Format("Para {0}", funcionalidade.Para));
+
+                str.WriteLine();
+
+                foreach (Cenario cenario in funcionalidade.Cenarios)
+                {
+                    str.WriteLine(string.Format("Cenario: {0}", cenario.Descricao));
+                    str.WriteLine(string.Format("Dado {0}", cenario.Dado));
+                    str.WriteLine(string.Format("Quando {0}", cenario.Quando));
+                    str.WriteLine(string.Format("Entao {0}", cenario.Entao));
+                    str.WriteLine();
+                }                
+            }
+        }
+
+        private List<Funcionalidade> ExtraiPlanilha(string nomePlanilha, string caminho)
         {            
             List<Funcionalidade> funcionalidades = new List<Funcionalidade>();
 
@@ -85,17 +79,10 @@ namespace TestManager.BLL
                 Excel.Application xls = new Excel.Application();
                 Excel.Workbook xWork = null;
                 Excel.Range xRange = null;
-
                 
                 xWork = xls.Workbooks.Open(caminho);
-                Excel.Worksheet sheet = xWork.Sheets["Funcionalidade"];                
+                Excel.Worksheet sheet = xWork.Sheets[nomePlanilha];                
                 xRange = sheet.UsedRange;
-
-                // Aqui é o ponto
-                var t = xRange.Find("que possa gerar uma operação", Missing.Value, 
-                    Excel.XlFindLookIn.xlValues, Excel.XlLookAt.xlPart,    
-                    Excel.XlSearchOrder.xlByRows, Excel.XlSearchDirection.xlNext, false,
-                    Missing.Value, Missing.Value);
 
                 int rowCount = xRange.Rows.Count;
                 int colCount = xRange.Columns.Count;
@@ -127,13 +114,70 @@ namespace TestManager.BLL
                 xls.Quit();
                 Marshal.ReleaseComObject(xls);                
             });
-                        
+
             task.Wait();
             task.Dispose();
 
             return funcionalidades;
         }
 
+        private List<Cenario> ExtraiCenarioPorFuncionalidade(Funcionalidade funcionalidade, string caminho, string nomePlanilha)
+        {
+            List<Cenario> cenarios = new List<Cenario>();
+
+            Excel.Application xls = new Excel.Application();
+            Excel.Workbook xWork = null;
+            Excel.Range xRange = null;
+
+            xWork = xls.Workbooks.Open(caminho);
+            Excel.Worksheet sheet = xWork.Sheets[nomePlanilha];
+            xRange = sheet.UsedRange;
+
+            Excel.Range currentFind = null;
+            Excel.Range firstFind = null;
+            
+            currentFind = xRange.Find(funcionalidade.ID, Missing.Value,
+                Excel.XlFindLookIn.xlValues, Excel.XlLookAt.xlPart,
+                Excel.XlSearchOrder.xlByRows, Excel.XlSearchDirection.xlNext, false,
+                Missing.Value, Missing.Value);
+
+            while (currentFind != null)
+            {
+                if (firstFind == null)
+                {
+                    firstFind = currentFind;
+                }
+                else if (currentFind.get_Address(Excel.XlReferenceStyle.xlR1C1)
+                      == firstFind.get_Address(Excel.XlReferenceStyle.xlR1C1))
+                {
+                    break;
+                }
+
+                Cenario cenario = new Cenario();
+                cenario.Descricao = Texto.RetiraAcento(currentFind[1, 3].Value);
+                cenario.Dado = Texto.RetiraAcento(currentFind[1, 4].Value);
+                cenario.Quando = Texto.RetiraAcento(currentFind[1, 5].Value);
+                cenario.Entao = Texto.RetiraAcento(currentFind[1, 6].Value);
+
+                cenarios.Add(cenario);
+
+                currentFind = xRange.FindNext(currentFind);
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Marshal.ReleaseComObject(xRange);
+
+            xWork.Close();
+            Marshal.ReleaseComObject(xWork);
+
+            xls.Quit();
+            Marshal.ReleaseComObject(xls);
+
+            return cenarios;
+        }
+        
         //public async Task<bool> ImportarLayoutAlpha(string caminhoPlanilha, string caminhoArquivoSaida)
         //{
         //    xWork = xls.Workbooks.Open(caminhoPlanilha);
@@ -257,12 +301,12 @@ namespace TestManager.BLL
         //                    Missing.Value, false, false, Excel.XlSaveAsAccessMode.xlNoChange,
         //                    Excel.XlSaveConflictResolution.xlUserResolution, true,
         //                    Missing.Value, Missing.Value, Missing.Value);
-                       
+
         //                return true;
         //            }
         //            catch (Exception ex)
         //            {
-                        
+
 
         //                throw new Exception(ex.Message);
         //            }
